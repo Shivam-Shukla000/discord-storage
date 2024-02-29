@@ -6,26 +6,31 @@ export default function Upload() {
     setFile(e.target.files[0]);
   }
   async function handleSubmit() {
-    if (!file) {
-      console.log("no file");
-      return;
-    }
-    const formData = new FormData();
-    console.log(file);
-    formData.append("test", " true");
-    formData.append("file", file);
-    formData.append("fileName", file.name);
-
-    const response = await axios.post(
-      "http://localhost:5002/upload",
-      formData,
-      {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
+    try {
+      if (!file) {
+        console.log("no file");
+        return;
       }
-    );
-    console.log(response);
+      const formData = new FormData();
+      console.log(file);
+      formData.append("file", file);
+      formData.append("fileName", file.name);
+
+      const response = await axios.post(
+        "http://localhost:5002/upload",
+        formData,
+        {
+          timeout: 60000000,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+      console.log("failed");
+    }
   }
   return (
     <>
